@@ -1,0 +1,7 @@
+rsyslog Workshop
+================
+Es sollen die Grundlagen von rsyslog in Verbindung mit der Speicherung
+der Logdaten auf einem zentralen Server dargelegt werden. Hierzu werden
+nützliche Tools zur Analyse und Darstellung dieser Logdaten veranschaulicht.
+Eine Beispielkonfiguration wird durchgeführt um die Funktionsweise verstehen
+zu können.
