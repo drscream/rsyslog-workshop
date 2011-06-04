@@ -1,0 +1,63 @@
+\section{logrotate}
+\subsection{Installation}
+Bei den meisten Linux Distribution und rsyslog-Paket wird logrotate schon als Abhängigkeit installiert. Sollte dies nicht der Fall sein kann das Paket per gewünschtem Paketmanager nachinstalliert werden.
+
+\begin{tabular}{ll}
+	\hline
+	Linux Distribution & Installationsbefehl\\
+	\hline\hline
+	Debian, Ubuntu & apt-get install logrotate\\
+	SUSE, openSUSE & yast -i logrotate\\
+	Fedora         & yum install logrotate\\
+	Gentoo         & emerge logrotate\\
+\end{tabular}
+
+\subsection{Konfiguration}
+In \textit{/etc/logrotate.conf} befindet sich die Standardkonfiguration, diese importiert alle weiteren Konfigurationsdateien aus \textit{/etc/logrotate.d}. Der Aufbau dieser Dateien sieht folgendermaßen aus.
+
+\begin{lstlisting}
+/pfad/zu/einer/oder/mehrerer/log/dateien.log {
+	#	
+	# Konfigurationsoptionen
+	#
+	postrotate
+		#		
+		# Script das nach Beendigung ausgef"uhrt werden soll
+		#
+	endscript
+}
+\end{lstlisting}
+
+Da im vorherigen Abschnitt eine Verzeichnis \textit{/var/log/rsyslog.remote.archive} angelegt wurde. Ist nun gewünscht jeden Tag die alten Remote Protokolldateien zu archivieren. Die jeweilige Beschreibung der Konfigurationsoptionen erfolgt in der Datei.
+
+\begin{lstlisting}
+/var/log/rsyslog.remote/*.log {
+	## Speicherung der rotierenden Log-Dateien in einem separaten Ordner
+	olddir /var/log/rsyslog.remote.archive
+	## T"agliche Rotation
+	daily
+	## Behalte die Log-Dateien 30 Tage
+	rotate 30
+	## Benutze die Formatierung .YYYYMMDD anstatt .0,.1,.2 etc.
+	dateext
+	## Rotation auch von leeren Log-Dateien
+	ifempty
+	## Erstelle die Quell-Log-Dateien erneut, mit den alten Rechten
+	create
+	## Packe die Log-Dateien immer erst einen Tag nach dem aktuellen
+	## Durchlauf
+	delaycompress
+	## Packe Log-Dateien
+	compress
+	compresscmd /bin/gzip
+	compressoptions -9
+	uncompresscmd /bin/gunzip
+	## Keine Fehlermeldung falls eine Datei nicht existiert
+	missingok
+	## Lade rsyslog Konfigurationen nach dem beenden von logrotate neu
+	sharedscripts
+	postrotate
+		/etc/init.d/rsyslog reload &>/dev/null || true
+	endscript
+}
+\end{lstlisting}

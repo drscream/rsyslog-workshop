@@ -1,0 +1,151 @@
+\section{tenshi}
+\subsection{Installation}
+Für den Einsatz  wird eine Installation des Tenshi-Programms benötigt. Dieses kann auf zwei Wegen geschehen
+
+\begin{itemize}
+\item \textit{\$ wget http://dev.inversepath.com/tenshi/tenshi-latest.tar.gz}
+\item \textit{\$ sudo apt-get install tenshi}
+
+Um Reporte per E-Mail verschicken zu können ist ein \textit{PERL Net::SMTP Modul}  notwendig.
+\item \textit{\$ sudo apt-get install perl}
+\end{itemize}
+ 
+\subsection{Konfiguration}
+Die Konfiguration findet in der Datei \textit{/etc/tenshi/tenshi.conf} statt. Diese wird bei jedem starten des Programms zuerst ausgeführt. Anfangs liegt eine Beispielkonfiguration mit den wichtigsten Parametern vor. Deshalb muss sie zuerst an das eigene System angepasst werden. Weitere Informationen zu den einzelnen Funktionen von Tenshi sind in der Manual-Page zu finden (\textit{man tenshi}).	
+
+\begin{informationnote}
+Wichtig ist das Änderungen in der \textit{tenshi.conf}-Datei erst nach einem Neustart des Programms übernommen werden.
+\end{informationnote}
+
+\subsubsection{Allgemeine Einstellungen}
+In unserer Beispielkonfiguration werden folgende Parameter in der Datei \textit{tenshi.conf} definiert. 
+
+Der Tenshi Prozess bekommt eine User-ID und eine Gruppen-ID zugewiesen. Wichtig ist das sie Lesezugriffsberechtigung haben.
+\begin{lstlisting}
+set uid root
+set gid root
+\end{lstlisting}
+Angabe der zu lesenden Log-Dateien
+\begin{lstlisting}
+set logfile /var/log/auth.log	# Authentifizierung log
+\end{lstlisting}
+Der Datenstrom für die Analyse kann aus drei Quellen bezogen werden. 
+Über eine Datei in Verbindung mit \textit{tail},
+\begin{lstlisting}
+set tail /usr/bin/tail -q --follow=name --retry -n 0 
+\end{lstlisting}
+eine fifo-Datei
+\begin{lstlisting}
+set fifo /var/log/tenshi.fifo		
+\end{lstlisting}
+oder direkt über einen Ethernet-Port.	
+\begin{lstlisting}
+set listen 127.0.0.1:145
+\end{lstlisting}
+Dies ist eine Funktion die automatisch die PID in den Logzeilen  ausmaskiert.
+\begin{lstlisting}
+set hidepid on
+\end{lstlisting}
+Aktualisierungstakt in Sekunden , die Zeit darf jedoch max. 60 Sekunden sein.
+\begin{lstlisting}
+set sleep 5	
+\end{lstlisting}
+Begrenz die Anzahl der Zeilen, die in der nächsten E-Mail erscheinen werden.
+\begin{lstlisting} 
+set limit 800
+\end{lstlisting}
+
+Adresse des Mailservers.
+\begin{lstlisting} 
+set mailserver localhost
+set mailtimeout 10
+\end{lstlisting}
+
+Betreff der zu versendenden E-Mails als Default-Wert
+\begin{lstlisting} 
+set subject tenshi report
+\end{lstlisting}
+
+
+\subsubsection{Message-Queues}
+Nun werden die Message-Queues genauer spezifiziert. Sie ermöglichen den Einsatz verschiedener Berichte, die wiederum besitzen verschiedene Zeitintervalle. An dieser Stelle muss man sich Gedanken machen, welche Ereignisse sollen berichtet werden und vor allem in welchem Zeitintervall. Beispielsweise möchte man sofort informiert werden, wenn unerlaubte Zugriffe auf das System gemacht werden. 
+Syntax:
+
+\begin{lstlisting}
+set  queue  <queue_name>  <mail_from>   [pager:]<mail_to>   <cron_spec>  [<subject>]
+\end{lstlisting} 		
+Name der zu erstellenden Message-Queue 
+\begin{lstlisting}
+<queue_name>
+\end{lstlisting}
+Absender Adresse für die Berichte 
+\begin{lstlisting}
+<mail_from>
+\end{lstlisting}	
+
+Ziel E-Mail oder Pager angeben 
+\begin{lstlisting}
+[pager:]<mail_to>
+\end{lstlisting}
+	
+Definition des Intervalls in dem dieser Bericht gesendet werden soll. Die Syntax hierfür wird aus dem Paket \textit{crontab (man crontab)} benutzt.
+\begin{lstlisting}
+<cron_spec>
+[0 9-17/2 * * *]
+\end{lstlisting}
+Betreff einer E-Mail
+\begin{lstlisting}
+[<subject>]
+\end{lstlisting}
+
+Beispiel:
+\begin{lstlisting}
+set queue report   tenshi@localhost admin@localhost [0 9-17/2 * * *]
+set queue critical tenshi@localhost admin@localhost [now] tenshi CRITICAL report
+\end{lstlisting}
+
+\subsubsection{Gruppen}
+Nun müssen die Suchkriterien unter Bezug von regulären Ausdrücken definiert werden. Damit der Code Strukturiert und lesbar ist, wurde die Möglichkeit implementiert, Gruppen von regulären Ausdrücken zu bilden. Zeitgleich optimiert die Gruppenbildung das Programm. Die Gruppe wird vom Programm durchlaufen und kontrolliert die Ausdrücke. Sollte ein Ausdruck nicht stimmen, wird der Rest der Gruppe nicht durchlaufen. Dies erzielt eine hohe Zeitersparnis.
+Die Gruppen können auch problemlos in eigene Dateien ausgelagert werden. Hierfür hat die Installation des Programms zwei Ordner \textit{/etc/tenshi/includes-available} und \textit{/etc/tenshi/includes-active}. In dem Ordner includes-availabe sind die verfügbaren Gruppen und includes-active beinhaltet die Gruppen, die angewendet werden sollen. Letzteres wird auch beim Programmstart geladen.
+
+Syntax für die Gruppenbildung:
+\begin{lstlisting}
+<queue_name>[,<queue_name>..] <regexp>
+\end{lstlisting}
+
+Vier verschiedene Gruppenarten gibt es in Tenshi:
+\begin{itemize}
+\item \textbf{repeat} - Sich wiederholende Zeilen werden direkt abgefangen. Im günstigsten Fall, wird bei einer Zeilen Wiederholung, die Zeilenvariable des vorherigen Treffers um eins inkrementiert.
+\begin{lstlisting}
+repeat ^(?:last message repeated|above message repeats) (\\d+) time
+\end{lstlisting}
+\item \textbf{trash} - Gruppe sollte immer eine der ersten angesprochenen Gruppen sein, denn sie mustert alle unerwünschten Log-Zeilen aus. Sie kürzt die Log-Datei immens, so lässt sich die Systemauslastung verkleinern.
+\begin{lstlisting}  
+trash ^usb.c 
+trash ^sda
+\end{lstlisting}
+\item \textbf{group} - Gruppe wird zur Verfügung gestellt, um einen kompletten Satz von Ausdrücken zusammen zu fassen.
+\begin{lstlisting}
+group ^name
+group_end
+\end{lstlisting} 
+\item \textbf{group\_host} - Gruppe eignet sich besonders, wenn dieses Programm auf einem Log-Server ausgeführt wird. Sie ermöglicht eine direkte Zuweisung einer Gruppe zu einem Server.
+\begin{lstlisting}
+group_host webserver1
+group_end
+\end{lstlisting}
+\end{itemize}
+
+
+\subsection{Einbindung in rsyslog}
+Das Zusammenführen von Tenshi und rsyslog gestaltet sich in diesem Falle ganz einfach. Es muss lediglich die zu durchsuchende Log-Datei in der \textit{tenshi.conf} angegeben werden.
+Beispiel:
+\begin{lstlisting}
+set logfile /var/remoteserver/logs/webserver1.log
+set logfile /var/remoteserver/logs/webserver2.log
+...
+\end{lstlisting}
+
+\subsection{Auswertung}
+Dieses Programm wird sehr klein und überschaubar gehalten. Die Konfiguration gestaltet sich nach kurzer Einarbeitungszeit sehr einfach und lässt sich flexibel an die eigenen Bedürfnisse anpassen. Die Möglichkeit verschiedene Berichtslinien (Message-Queues) zu erstellen ist genial, so kann der System-Administrator sofort informiert werden, wenn z.B. unautorisierte Zugriffe auf ein System statt finden. Andere Ereignisse, die nur gelegentlich ausgewertet werden, können dann z.B. einmal wöchentlich geschickt werden. 
+Als Analysewerkzeug ist dieses Programm nicht gut geeignet, den es müssen weitere Programme zur grafischen Aufbereitung herangezogen werden. Hierfür kann Tenshi eine csv-Datei mit Komma getrennten Werten ausgeben.

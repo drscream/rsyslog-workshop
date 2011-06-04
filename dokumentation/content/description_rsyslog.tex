@@ -1,0 +1,32 @@
+\section{rsyslog}
+\subsection{Überblick}
+Ein syslog-Daemon sammelt und protokolliert alle Nachrichten die das Betriebssystem oder die Dienste auf diesem generieren. Abhängig von dem Logging Level der einzelnen Dienste werden Hinweise bis hin zu Debug Informationen protokolliert.
+
+Beispiel einer Protokoll Datei (Ausgabe gekürzt):
+\begin{lstlisting}
+2011-06-03T11:17:01 CRON[15360]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)
+2011-06-03T11:17:01 CRON[15358]: pam_unix(cron:session): session closed for user root
+2011-06-03T11:17:46 dhclient: DHCPREQUEST on eth0 to 172.22.175.1 port 67
+2011-06-03T11:17:46 dhclient: DHCPACK from 172.22.175.1
+2011-06-03T11:17:46 dhclient: bound to 172.22.175.2 -- renewal in 1396 seconds.
+2011-06-03T11:21:44 mountd[7380]: authenticated unmount request from 172.22.175.5:725 for /pxe (/pxe)
+\end{lstlisting}
+
+Rsyslog ist ein weiterer syslog-Daemon für Linux beziehungsweise Unix-Systeme. Er bietet durch inhaltsbasierten Filterung eine gute Grundlage für jedes System.
+
+\begin{importantnote}
+	Es wird rsyslog in der Version 4.6.4-2 unter Ubuntu Server 10.04 LTS eingesetzt. 
+	Die Konfiguration kann daher unter anderen Versionen und Distributionen abweichen.
+\end{importantnote}
+
+\subsection{Alternativen}
+Um einen besseren Überblick über die syslog-Landschaft zu erhalten werden einige Alternativen vorgestellt.
+
+\subsubsection*{syslogd und klogd}
+Mit syslogd handelt es sich um einen der ältesten und bekanntesten Protokolldienste. \cite{GentooProtokollierung} Dieser basiert auf zwei Versionen, einmal dem \textit{syslogd} und dem \textit{klogd}. Der \textit{syslogd} ist für das Protokollieren der Dienste zuständig, während der \textit{klogd} die Kernel Nachrichten entgegennimmt. \cite{AboutSyslogd}
+
+\subsubsection*{metalog}
+Metalog bietet nicht die Möglichkeit Protokolle an einen entfernten Server zu senden, aber es hat Vorteile im Bereich der Performance. Es kann nach Programmnamen, Dringlichkeit oder nach Einrichtung protokollieren und unterstützt reguläre Ausdrucke. Ebenso besteht die Möglichkeit Befehle auszuführen. \cite{GentooProtokollierung}
+
+\subsubsection*{syslog-ng}
+Syslog-NG bezeichnet sich selbst als syslog-Daemon der nächsten Generation. Er umfasst die Funktionalität von \textit{syslogd} und \textit{metalogd} und kombiniert beide Vorteile in einem Dienst. \cite{GentooProtokollierung} Ein großer Unterschied zu den klassischen Diensten ist die neu strukturierte Konfigurationsdatei.

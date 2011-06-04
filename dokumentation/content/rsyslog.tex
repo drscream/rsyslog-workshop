@@ -1,0 +1,45 @@
+\section{rsyslog}
+	\subsection{Überblick}
+		Rsyslog ist ein weiterer syslog-Daemon für Linux beziehungsweise Unix-Systeme. Er bietet, durch 
+		die Möglichkeit der inhaltsbasierten Filterung, eine gute Grundlage für jedes System.
+		In diesem Abschnitt wird die Installation und Konfiguration von rsyslog für den Remote Logging
+		Einsatz vorgestellt.
+
+		\Hinweisbox{
+			Es wird rsyslog in der Version 4.6.4-2 unter Ubuntu Server 10.04 LTS eingesetzt. 
+			Die Konfiguration kann daher unter anderen Versionen und Distributionen abweichen.
+		}
+
+	\subsection{Alternativen}
+		Um einen besseren Überblick über die syslog-Landschaft zu erhalten werden einige Alternativen vorgestellt.
+		\subsubsection*{syslogd}
+		Bei syslogd handelt es sich um den ältesten und bekanntesten Protokoll-Daemon.\cite{GentooProtokollierung}
+		\subsubsection*{syslog-ng}
+	\subsection{Remote logging}
+		\subsubsection*{Vorteile}
+		\subsubsection*{Nachteile}
+	\subsection{Installation}
+		In einigen Linux Distributionen wie zum Beispiel Debian und Ubuntu ist rsyslog schon zum Standard 
+		geworden. Für andere Distributionen empfiehlt es sich den Paketmanager zur Installation zu verwenden.
+
+		\begin{tabular}{ll}
+			\hline
+			Linux Distribution & Installationsbefehl\\
+			\hline\hline
+			Debian, Ubuntu & apt-get install rsyslog\\
+			SUSE, openSUSE & yast -i rsyslog\\
+			Fedora         & yum install rsyslog\\
+			Gentoo         & emerge rsyslog
+		\end{tabular}
+
+		\Hinweisbox{
+			Gentoo Benutzer sollten die passenden Useflags für das rsyslog Paket beachten. Empfehlenswert sind
+			\textit{gnutls}, \textit{logrotate} und \textit{zlib}. 
+		}
+
+	\subsection{Konfiguration}
+		\subsubsection*{Server}
+		\subsubsection*{Linux Client}
+		\subsubsection*{Windows Client}
+		\subsubsection*{Debugging}
+
