@@ -1,7 +1,7 @@
 \section{logrotate}
 \subsection{Überblick}
-Bei vielen Protokolldateien kann schnell der Überblick verloren gehen. Ebenso können Protokolldateien eine Größe von mehren Megabyte erreichen. Logrotate ist ein kleines Werkzeug das eine Rotation und Archivierung der Protokolldateien vornehmen kann. Diese Rotation kann ab einer bestimmten Größe, täglich, wöchentlich oder monatlich geschehen.
+Bei vielen Protokolldateien kann schnell der Überblick verloren gehen. Ebenso können Protokolldateien eine Größe von mehren Megabyte erreichen. Logrotate ist ein kleines Werkzeug, das eine Rotation und Archivierung der Protokolldateien vornehmen kann. Diese Rotation kann ab einer bestimmten Größe, täglich, wöchentlich oder monatlich geschehen.
 
 \subsection{Alternativen}
-Eine direkte Alternative für logrotate gibt es nicht. Jedoch bietet unter anderm rsyslog die Möglichkeit Protokolldateien per Datum anzulegen und diese somit automatisch rotieren zu lassen. Hierbei wird dann noch ein separates Bash-Script geschrieben das diese Dateien Archiviert und zum Beispiel Packt.
-Für den Apache Webserver wird cronolog angebotet. Dieses Programm erstellt Webserver Protokolldateien, falls gewünscht inklusive Datum im Dateinamen. Durch die Angabe des Datums führt das Script eine automatische rotation durch und archiviert diese Dateien. Weitere Informationen zu cronolog sind auf dessen Internetauftritt zu finden \url{http://cronolog.org/}. 
+Eine direkte Alternative für logrotate gibt es nicht. Jedoch bietet unter anderm rsyslog die Möglichkeit Protokolldateien per Datum anzulegen und diese somit automatisch rotieren zu lassen. Hierbei wird dann noch ein separates Bash-Script geschrieben das diese Dateien archiviert und zum Beispiel packt.
+Für den Apache Webserver wird cronolog angeboten. Dieses Programm erstellt Webserver Protokolldateien, falls gewünscht, inklusive Datum im Dateinamen. Durch die Angabe des Datums führt das Script eine automatische Rotation durch und archiviert diese Dateien. Weitere Informationen zu cronolog sind auf dessen Internetauftritt zu finden \url{http://cronolog.org/}. 
