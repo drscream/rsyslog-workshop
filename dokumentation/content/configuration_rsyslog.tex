@@ -69,9 +69,9 @@ Es wird Empfohlen die Konfiguration in mehrere, nach Teilaufgaben spezifizierte,
 
 \begin{lstlisting}
 # Ein Host
-$AllowedSender UDP, 192.168.1.4
+$AllowedSender UDP, 192.168.56.100
 # Alle Hosts aus einem Subnetz
-$AllowedSender UDP, 192.168.2.0/24
+$AllowedSender UDP, 192.168.56.0/24
 # Jeder von kernel.org
 $AllowedSender UDP, *.kernel.org
 \end{lstlisting}
@@ -94,7 +94,7 @@ $template RemoteServerLog, "/var/log/rsyslog.remote/%HOSTNAME%.log"
 Es erfolgt nun die Konfiguration eines Linux Client Rechners. Dieser soll all seine Protokollinformationen an den Server senden. Hierzu ist ein einfacher Eintrag in \textit{/etc/rsyslog.d/00-RemoteLogging.conf} nötig.
 
 \begin{lstlisting}
-*.*	@192.168.1.1
+*.*	@192.168.56.1
 \end{lstlisting}
 
 Ein \textit{@}-Zeichen gibt an das die Protokollinformationen per UDP an den Server versandt werden. Um eine TCP Verbindung zu verwenden müssen zwei \textit{@}-Zeichen verwendet werden.
