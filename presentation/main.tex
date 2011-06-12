@@ -7,6 +7,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{lmodern}
+\usepackage{hyperref}
 
 % Beamer Settings
 \usetheme{Singapore}
@@ -15,6 +16,7 @@
 
 % Default Presentation Settings
 \title{Remote Logging mit rsyslog}
+\subtitle{Inklusive Tools zur Überwachung und Verwaltung}
 \author{Thomas Merkel \and Arkadiusz Rawa \and Janik Lemcke}
 \institute{Hochschule Ravensburg-Weingarten}
 \date{\today} 
@@ -24,21 +26,29 @@
 	\begin{frame}
 		\titlepage
 	\end{frame} 
-
 	\begin{frame}
-		\frametitle{Inhaltsverzeichnis}
 		\tableofcontents
-	\end{frame} 
+	\end{frame}
 	
 	% Presentation Parts
+	\input{overview.tex}
 	\input{rsyslog.tex}
 	\input{tenshi.tex}
 	\input{phplogcon.tex}
 
 	% Last Slide
 	\begin{frame}
-		\begin{beamercolorbox}[center,shadow=true,rounded=true,]{note} 
-        	Fragen? Diskussion? :-)
-		\end{beamercolorbox} 
+		\frametitle{Diskussion}
+		\framesubtitle{Fragen, Anregungen, Wünsche}
+		\begin{itemize}
+			\item Workshop am nächsten Termin der Linux User Group Weingarten
+			\item Alle Unterlagen unter \url{https://github.com/drscream/rsyslog-workshop}		
+		\end{itemize}
+		\bigskip
+		\bigskip
+		\scriptsize{
+			Danke an Paul Nijjar für seine Präsentation: \linebreak 
+			\textit{Remote Logging with Rsyslog - How I Learned to Start Worrying and Love the Panopticon}
+		}
 	\end{frame}
 \end{document}
