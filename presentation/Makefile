@@ -13,4 +13,4 @@ open:
 	open main.dvi
 
 clean:
-	rm -f *.aux *.dvi *.log *.nav *.out *.pdf *.ps *.snm *.toc
+	rm -f *.aux *.dvi *.log *.nav *.out *.pdf *.ps *.snm *.toc *.vrb

@@ -1,12 +1,25 @@
 \section{rsyslog}
 \subsection{Überblick}
-\begin{frame}
+\begin{frame}[fragile]
 	\frametitle{rsyslog}
 	\framesubtitle{"Uberblick}
 	\begin{itemize}
 		\item Alternativer syslog-Daemon
 		\item Standard bei Debian-basierten Distributionen
 	\end{itemize}
+	\begin{center}
+		\begin{tiny}
+			\begin{verbatim}
+	2011-06-13T10:14:50 bayamo rsyslogd: -- MARK --
+	2011-06-13T10:14:55 bayamo sshd[11015]: Accepted publickey for tm from 172.22.175.51 port 49425 ssh2
+	2011-06-13T10:14:55 bayamo sshd[11015]: pam_unix(sshd:session): session opened for user tm by (uid=0)
+	2011-06-13T10:14:56 bayamo sudo:       tm : TTY=pts/0 ; PWD=/home/tm ; USER=root ; COMMAND=/bin/su
+	2011-06-13T10:14:56 bayamo su[11083]: Successful su for root by root
+	2011-06-13T10:14:56 bayamo su[11083]: + /dev/pts/0 root:root
+	2011-06-13T10:14:56 bayamo su[11083]: pam_unix(su:session): session opened for user root by tm(uid=0)
+			\end{verbatim}
+		\end{tiny}
+	\end{center}
 \end{frame}
 
 \subsection{Vorteile}
@@ -22,25 +35,67 @@
 \end{frame}
 
 \subsection{Installation}
-\begin{frame}
+\begin{frame}[fragile]
 	\frametitle{rsyslog}
 	\framesubtitle{Installation}
 	Paketmanager des Systems ist zu empfehlen
-\begin{block}{Blocktitel} 
-Blockinhalt
-\end{block}
-
+	\bigskip
+	\begin{block}{Debian, Ubuntu}
+		\begin{verbatim}
+			apt-get install rsyslog
+		\end{verbatim}
+	\end{block}
 \end{frame}
 
 \subsection{Konfiguration}
 \subsubsection{Konfigurationsdateien}
-\begin{frame}
+\begin{frame}[fragile]
 	\frametitle{rsyslog}
 	\framesubtitle{Konfigurationsdateien}
+	\begin{block}{Dateien und Verzeichnisse}
+		\begin{verbatim}
+			/etc/rsyslog.conf
+			/etc/rsyslog.d/*.conf
+		\end{verbatim}
+	\end{block}
+	Sortierung erfolgt durch Nummerierung:
+	\begin{itemize}
+		\item \verb|/etc/rsyslog.d/00-AllowedHosts.conf|
+		\item \verb|/etc/rsyslog.d/10-RemoteLinuxServers.conf|
+		\item \verb|/etc/rsyslog.d/99-Default.conf|
+	\end{itemize}
 \end{frame}
 
 \subsubsection{Remote Logging aktivieren}
-\begin{frame}
-	\frametitle{rsyslog}
+\begin{frame}[fragile]
+	\frametitle{rsyslog (server)}
 	\framesubtitle{Remote Logging aktivieren}
+	In \verb|/etc/rsyslog.conf|, folgende Zeile einfügen:
+	\begin{verbatim}
+		$ModLoad imudp
+		$UDPServerRun 514
+	\end{verbatim}
+\end{frame}
+\begin{frame}[fragile]
+	\frametitle{rsyslog (Server)}
+	\framesubtitle{Remote Logging aktivieren}
+	Zugriffssteuerung in \verb|/etc/rsyslog.d/00-AllowRemoteLogging.conf|
+	\begin{verbatim}
+		# Ein Host
+		$AllowedSender UDP, 192.168.56.100
+		# Alle Hosts aus einem Subnetz
+		$AllowedSender UDP, 192.168.56.0/24
+		# Jeder von kernel.org
+		$AllowedSender UDP, *.kernel.org
+	\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{rsyslog (Linux Client)}
+	\framesubtitle{Remote Logging aktivieren}
+	Eintrag in \verb|/etc/rsyslog.d/00-RemoteLogging.conf|
+	\begin{verbatim}
+		*.*		@192.168.56.1
+	\end{verbatim}
+	Viele syslog-Daemons werden unterstützt
 \end{frame}
