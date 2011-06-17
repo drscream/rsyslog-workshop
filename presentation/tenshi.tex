@@ -1,6 +1,138 @@
 \section{tenshi}
-\begin{frame}
+\subsection{Überblick}
+\begin{frame}[fragile]
 	\frametitle{tenshi}
-	\framesubtitle{Allgemeines}
-	bla bla
+	\framesubtitle{"Uberblick}
+	Tenshi ...
+	\begin{itemize}
+		\item ist ein Log Analyse Tool
+		\item informiert
+		\item wird als Dienst ausgeführt
+	\end{itemize}
+\end{frame}
+
+\subsection{Vorteile}
+\begin{frame}[fragile]
+	\frametitle{tenshi}
+	\framesubtitle{Vorteile}
+	\begin{itemize}
+		\item Einfach
+		\item Schnelle Installation und Konfiguration
+		\item Benutzerdefinierte Suchausdrücke
+		\item Ziel und Zeit der Ausgabe ist flexibel
+		\item E-Mail Benachrichtigung möglich
+	\end{itemize}
+\end{frame}
+
+\subsection{Installation}
+\begin{frame}[fragile]
+	\frametitle{tenshi}
+	\framesubtitle{Installation}
+	Eine Installation ist mit dem Paketmanager möglich.
+	\begin{block}{Debian, Ubuntu}
+		\begin{verbatim}
+			apt-get install tenshi
+		\end{verbatim}
+	\end{block}
+\end{frame}
+
+\subsection{Konfiguration}
+\begin{frame}[fragile]
+	\frametitle{tenshi}
+	\framesubtitle{Konfigurationsdateien}
+	\begin{block}{Grundeinstellungen}
+		\begin{verbatim}
+			/etc/tenshi/tenshi.conf
+		\end{verbatim}
+	\end{block}
+	\bigskip
+	\begin{block}{Ordner für Regeln}
+		\begin{verbatim}
+			/etc/tenshi/includes-active
+			/etc/tenshi/includes-available
+		\end{verbatim}
+	\end{block}	
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{tenshi}
+	\framesubtitle{Logs / Mailserver}
+	\begin{block}{Welche Dateien sollen "uberwacht werden?}
+		\begin{verbatim}
+			set logfile /var/log/auth.log
+			set logfile /var/log/remote-logs/webserver1.log
+		\end{verbatim}	
+	\end{block}
+	\bigskip
+	\begin{block}{"Uber welchen Mailserver werden E-Mails versendet?}
+		\begin{verbatim}
+			set mailserver localhost
+		\end{verbatim}	
+	\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{tenshi}
+	\framesubtitle{Message - Queues}
+	Message-Queues ... 
+	\begin{itemize}
+		\item sind Verteiler
+		\item können verschiedene Empfänger haben
+		\item haben einen flexiblen Intervall
+	\end{itemize}
+	\bigskip
+	\begin{block}{Syntax}
+		\begin{scriptsize}
+			\begin{verbatim}
+				set queue <queue_name> <mail_from> <mail_to><interval>
+
+				set queue foo SrcMail DstMail [now] Server crushed !!!
+				set queue bar SrcMail2 DstMail2 [0 9 -17/2 * * *] Important !
+			\end{verbatim}
+		\end{scriptsize}
+	\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{tenshi}
+	\framesubtitle{Gruppen}
+		Gruppen ...
+	\begin{itemize}
+		\item beinhalten Regeln
+		\item verkürzen die Suchdauer
+		\item werden in den Ordnern abgelegt \\ 
+			\verb|/etc/tenshi/includes-active|\\
+			\verb|/etc/tenshi/includes-available|
+		\item Beispielgruppen sind vorhanden (loginsusudo, ssh, ...)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{tenshi}
+	\framesubtitle{Ein Beispiel}
+	\begin{itemize}
+		\item Auszug aus der Datei \verb|auth.log|
+		\begin{block}{}
+		\begin{tiny}
+			\begin{verbatim}
+Jun 1 17:19 loki su[1768]: Successful su for root by jowhite
+Jun 1 17:19 loki su[1768]: + /dev/pts/1 jowhite:root
+Jun 1 17:19 loki su[1768]: pam_unix(su:session): session opened for user root by jowhite(uid=1000)
+Jun 1 17:19 loki su[1768]: pam_unix(su:session): session closed for user root
+			\end{verbatim}
+		\end{tiny}
+		\end{block}
+		\item Definition der Gruppe
+		\begin{block}{}
+		\begin{tiny}
+			\begin{verbatim}			
+group ^su\(pam_unix\):
+su      ^su: pam_unix\(su:session\): session opened for user root(?: by \(uid=.+\))?
+su      ^su: pam_unix\(su:session\): session closed for user root
+su      ^su: Successful su for .+ by .+
+group_end
+			\end{verbatim}
+		\end{tiny}
+		\end{block}
+	\end{itemize}
 \end{frame}
