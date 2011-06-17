@@ -12,7 +12,7 @@
 
 % Beamer Settings
 \usetheme{Singapore}
-\setcounter{tocdepth}{1}
+\setcounter{tocdepth}{2}
 
 \setbeamertemplate{blocks}[rounded]
 \setbeamercolor{block title}{bg=blue!10} 
@@ -25,13 +25,22 @@
 \institute{Hochschule Ravensburg-Weingarten}
 \date{\today} 
 
+\AtBeginSection[]{%
+	\begin{frame}<beamer>
+		\frametitle{Inhalt}
+		\tableofcontents[sectionstyle=show/hide,subsectionstyle=hide/show/hide]
+	\end{frame}
+	\addtocounter{framenumber}{-1}% If you don't want them to affect the slide number
+}
+
 \begin{document}
 	% Intro
 	\begin{frame}
 		\titlepage
 	\end{frame} 
 	\begin{frame}
-		\tableofcontents
+		\frametitle{Inhaltsverzeichnis}
+		\tableofcontents[hideallsubsections]
 	\end{frame}
 	
 	% Presentation Parts
